@@ -1,0 +1,217 @@
+# Welcome message
+GET http://localhost:3000/api
+
+#{
+#  "message": "Selamat datang di technical test Nutech!"
+#}
+
+###
+
+# Get all users
+GET http://localhost:3000/api/users
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJmYWRoYWlsQGV4YW1wbGUuY29tIiwiaWF0IjoxNzYxODQyMDMwLCJleHAiOjE3NjE5Mjg0MzB9.oXWfQRqej1DYGJ4VhNqrFeNObRdI5GSWpkj7XmMHdag
+
+#{
+#  "users": [
+#    {
+#      "id": 1,
+#      "name": "faris",
+#      "email": "faris@example.com",
+#      "createdAt": "2025-10-30T23:12:54.569Z",
+#      "updatedAt": "2025-10-30T23:12:54.569Z"
+#    },
+#    ...
+#  ]
+#}
+
+###
+
+# Register a new user
+POST http://localhost:3000/api/users/_register
+Content-Type: application/json
+
+{
+  "email": "fadhail@example.com",
+  "name": "fadhail",
+  "password": "password"
+}
+
+###
+
+#response register user
+#{
+#  "message": "User berhasil dibuat",
+#  "user": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJmYWRoYWlsQGV4YW1wbGUuY29tIiwiaWF0IjoxNzYxODQyMDMwLCJleHAiOjE3NjE5Mjg0MzB9.oXWfQRqej1DYGJ4VhNqrFeNObRdI5GSWpkj7XmMHdag"
+#}
+
+###
+
+# Login user
+POST http://localhost:3000/api/users/_login
+Content-Type: application/json
+
+{
+  "email": "faris@example.com",
+  "password": "password"
+}
+
+###
+#response login user
+#{
+#  "message": "Login berhasil",
+#  "user": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmYXJpc0BleGFtcGxlLmNvbSIsImlhdCI6MTc2MTg0MTk4NSwiZXhwIjoxNzYxOTI4Mzg1fQ.8H2RHWmH4aRAcltG7lAofMn9ihrpxDstiX4I5XDqO9w"
+#}
+
+###
+
+# Get balance
+GET http://localhost:3000/api/balance
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmYXJpc0BleGFtcGxlLmNvbSIsImlhdCI6MTc2MTg0MDc3NCwiZXhwIjoxNzYxOTI3MTc0fQ.yVrwW-g3IR8T5avjcQxRAPGHNujGjf0Z-OLLLq6gMv0
+
+#{
+#  "balance": "104000",
+#  "created_at": "2025-10-30T23:12:54.569Z",
+#  "updated_at": "2025-10-30T23:12:54.569Z",
+#  "id": 1,
+#  "user_id": 1
+#}
+
+###
+
+# Top up balance
+POST http://localhost:3000/api/balance/top-up
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmYXJpc0BleGFtcGxlLmNvbSIsImlhdCI6MTc2MTg0MDc3NCwiZXhwIjoxNzYxOTI3MTc0fQ.yVrwW-g3IR8T5avjcQxRAPGHNujGjf0Z-OLLLq6gMv0
+content-Type: application/json
+
+{
+  "amount": 50000
+}
+
+###
+
+#response top up balance
+#{
+#  "message": "Top-up successful",
+#  "result": {
+#    "balance": {
+#      "balance": "104000",
+#      "created_at": "2025-10-30T23:12:54.569Z",
+#      "updated_at": "2025-10-30T23:12:54.569Z",
+#      "id": 1,
+#      "user_id": 1
+#    },
+#    "top_up_amount": "50000"
+#  }
+#}
+
+###
+
+# Payment transaction
+POST http://localhost:3000/api/transactions/pay
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmYXJpc0BleGFtcGxlLmNvbSIsImlhdCI6MTc2MTg0MDc3NCwiZXhwIjoxNzYxOTI3MTc0fQ.yVrwW-g3IR8T5avjcQxRAPGHNujGjf0Z-OLLLq6gMv0
+content-Type: application/json
+
+{
+  "service_code": "MUSIK",
+  "description": "Langganan Musik Premium"
+}
+
+###
+
+#response payment transaction
+#{
+#  "message": "Transaction successful",
+#  "result": {
+#    "transaction": {
+#      "invoice_number": "INV-1761841892915-470",
+#      "service_code": "MUSIK",
+#      "service_name": "Musik Berlangganan",
+#      "total_amount": "49000",
+#      "description": "Langganan Musik Premium",
+#      "created_at": "2025-10-30T23:31:32.916Z",
+#      "id": 4,
+#      "user_id": 1,
+#      "service_id": 23
+#    },
+#    "balance": {
+#      "balance": "54000",
+#      "created_at": "2025-10-30T23:12:54.569Z",
+#      "updated_at": "2025-10-30T23:12:54.569Z",
+#      "id": 1,
+#      "user_id": 1
+#    }
+#  }
+#}
+
+###
+
+# Get transaction by invoice number
+GET http://localhost:3000/api/transactions/INV-1761840815779-158
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmYXJpc0BleGFtcGxlLmNvbSIsImlhdCI6MTc2MTg0MDc3NCwiZXhwIjoxNzYxOTI3MTc0fQ.yVrwW-g3IR8T5avjcQxRAPGHNujGjf0Z-OLLLq6gMv0
+
+#{
+#  "invoice_number": "INV-1761840815779-158",
+#  "service_code": "MUSIK",
+#  "service_name": "Musik Berlangganan",
+#  "total_amount": "49000",
+#  "description": "Langganan Musik Premium",
+#  "created_at": "2025-10-30T23:13:35.779Z",
+#  "id": 1,
+#  "user_id": 1,
+#  "service_id": 23
+#}
+
+###
+
+# Get history transactions
+GET http://localhost:3000/api/transactions/history
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmYXJpc0BleGFtcGxlLmNvbSIsImlhdCI6MTc2MTgzNTIzNCwiZXhwIjoxNzYxOTIxNjM0fQ.adxAIBVYpRSyF2-xDag_KtgKv1KDGVpsSdsZxNF-i3g
+
+#{
+#  "transactions": [
+#    {
+#      "invoice_number": "INV-1761840827820-852",
+#      "service_code": "MUSIK",
+#      "service_name": "Musik Berlangganan",
+#      "total_amount": "49000",
+#      "description": "Langganan Musik Premium",
+#      "created_at": "2025-10-30T23:13:47.821Z",
+#      "id": 3,
+#      "user_id": 1,
+#      "service_id": 23
+#    },
+#    ...
+#    ]
+#}
+
+###
+
+# Get all services
+GET http://localhost:3000/api/services
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmYXJpc0BleGFtcGxlLmNvbSIsImlhdCI6MTc2MTgzNTIzNCwiZXhwIjoxNzYxOTIxNjM0fQ.adxAIBVYpRSyF2-xDag_KtgKv1KDGVpsSdsZxNF-i3g
+
+#{
+#  "services": [
+#    {
+#      "service_code": "BPJS",
+#      "service_name": "BPJS Kesehatan",
+#      "service_tariff": "150000",
+#      "description": "Iuran BPJS Kesehatan",
+#      "is_active": true,
+#      "created_at": "2025-10-30T16:12:03.289Z",
+#      "updated_at": "2025-10-30T16:12:03.289Z",
+#      "id": 26
+#    },
+#    {
+#      "service_code": "PLN_PASCABAYAR",
+#      "service_name": "Listrik Pascabayar",
+#      "service_tariff": "150000",
+#      "description": "Pembayaran tagihan listrik PLN",
+#      "is_active": true,
+#      "created_at": "2025-10-30T16:12:03.289Z",
+#      "updated_at": "2025-10-30T16:12:03.289Z",
+#      "id": 17
+#    },
+#    ...
+#    ]
+#}

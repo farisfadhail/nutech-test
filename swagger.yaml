@@ -1,0 +1,521 @@
+openapi: 3.0.3
+info:
+  title: Nutech API
+  description: API Documentation for Nutech Technical Test
+  version: 1.0.0
+  contact:
+    name: Nutech Support
+    email: support@nutech.com
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+
+tags:
+  - name: General
+    description: General endpoints
+  - name: Users
+    description: User management endpoints
+  - name: Balance
+    description: Balance management endpoints
+  - name: Transactions
+    description: Transaction management endpoints
+  - name: Services
+    description: Service management endpoints
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token untuk autentikasi
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "faris"
+        email:
+          type: string
+          format: email
+          example: "faris@example.com"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-10-30T23:12:54.569Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-10-30T23:12:54.569Z"
+
+    Balance:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        balance:
+          type: string
+          example: "104000"
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-10-30T23:12:54.569Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-10-30T23:12:54.569Z"
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 4
+        user_id:
+          type: integer
+          example: 1
+        service_id:
+          type: integer
+          example: 23
+        invoice_number:
+          type: string
+          example: "INV-1761841892915-470"
+        service_code:
+          type: string
+          example: "MUSIK"
+        service_name:
+          type: string
+          example: "Musik Berlangganan"
+        total_amount:
+          type: string
+          example: "49000"
+        description:
+          type: string
+          example: "Langganan Musik Premium"
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-10-30T23:31:32.916Z"
+
+    Service:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 26
+        service_code:
+          type: string
+          example: "BPJS"
+        service_name:
+          type: string
+          example: "BPJS Kesehatan"
+        service_tariff:
+          type: string
+          example: "150000"
+        description:
+          type: string
+          example: "Iuran BPJS Kesehatan"
+        is_active:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-10-30T16:12:03.289Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-10-30T16:12:03.289Z"
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - name
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "fadhail@example.com"
+        name:
+          type: string
+          example: "fadhail"
+        password:
+          type: string
+          format: password
+          example: "password"
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "faris@example.com"
+        password:
+          type: string
+          format: password
+          example: "password"
+
+    TopUpRequest:
+      type: object
+      required:
+        - amount
+      properties:
+        amount:
+          type: number
+          example: 50000
+          description: Jumlah top-up
+
+    PaymentRequest:
+      type: object
+      required:
+        - service_code
+        - description
+      properties:
+        service_code:
+          type: string
+          example: "MUSIK"
+          description: Kode layanan yang akan dibayar
+        description:
+          type: string
+          example: "Langganan Musik Premium"
+          description: Deskripsi transaksi
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Error message"
+
+paths:
+  /:
+    get:
+      tags:
+        - General
+      summary: Welcome message
+      description: Endpoint untuk mendapatkan pesan selamat datang
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Selamat datang di technical test Nutech!"
+
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      description: Mendapatkan daftar semua user
+      security:
+        - BearerAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/_register:
+    post:
+      tags:
+        - Users
+      summary: Register a new user
+      description: Mendaftarkan user baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User berhasil dibuat"
+                  user:
+                    type: string
+                    description: JWT token
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/_login:
+    post:
+      tags:
+        - Users
+      summary: Login user
+      description: Login user dan mendapatkan JWT token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login berhasil
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Login berhasil"
+                  user:
+                    type: string
+                    description: JWT token
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /balance:
+    get:
+      tags:
+        - Balance
+      summary: Get balance
+      description: Mendapatkan saldo user yang sedang login
+      security:
+        - BearerAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /balance/top-up:
+    post:
+      tags:
+        - Balance
+      summary: Top up balance
+      description: Menambah saldo user
+      security:
+        - BearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopUpRequest'
+      responses:
+        '200':
+          description: Top-up successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Top-up successful"
+                  result:
+                    type: object
+                    properties:
+                      balance:
+                        $ref: '#/components/schemas/Balance'
+                      top_up_amount:
+                        type: string
+                        example: "50000"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /transactions/pay:
+    post:
+      tags:
+        - Transactions
+      summary: Payment transaction
+      description: Melakukan pembayaran untuk layanan tertentu
+      security:
+        - BearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: Transaction successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Transaction successful"
+                  result:
+                    type: object
+                    properties:
+                      transaction:
+                        $ref: '#/components/schemas/Transaction'
+                      balance:
+                        $ref: '#/components/schemas/Balance'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /transactions/{invoice_number}:
+    get:
+      tags:
+        - Transactions
+      summary: Get transaction by invoice number
+      description: Mendapatkan detail transaksi berdasarkan nomor invoice
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: invoice_number
+          in: path
+          required: true
+          description: Nomor invoice transaksi
+          schema:
+            type: string
+            example: "INV-1761840815779-158"
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Transaction not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /transactions/history:
+    get:
+      tags:
+        - Transactions
+      summary: Get history transactions
+      description: Mendapatkan riwayat transaksi user
+      security:
+        - BearerAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /services:
+    get:
+      tags:
+        - Services
+      summary: Get all services
+      description: Mendapatkan daftar semua layanan yang tersedia
+      security:
+        - BearerAuth: [ ]
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  services:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Service'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
